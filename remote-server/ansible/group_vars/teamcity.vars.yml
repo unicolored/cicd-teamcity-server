@@ -1,0 +1,14 @@
+---
+debian_release: bookworm
+host_user: debian
+project: teamcity
+docker_compose_version: v2.23.0
+aws_access_key_id: "{{vault_aws_access_key_id}}"
+aws_secret_access_key: "{{vault_aws_secret_access_key}}"
+agent_aws_access_key_id: "{{vault_agent_aws_access_key_id}}"
+agent_aws_secret_access_key_id: "{{vault_agent_aws_secret_access_key_id}}"
+postgresql_user: "{{vault_postgresql_user}}"
+postgresql_password: "{{vault_postgresql_password}}"
+postgresql_host: "{{vault_postgresql_host}}"
+postgresql_port: "{{vault_postgresql_port}}"
+postgresql_database: "{{vault_postgresql_database}}"

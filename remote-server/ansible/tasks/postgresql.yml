@@ -1,0 +1,21 @@
+# PACKAGES
+- debug:
+    msg: 📀 TASK POSTGRESQL
+
+- name: Update apt package cache
+  apt:
+    update_cache: yes
+
+- name: Install PostgreSQL and contrib packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - postgresql
+    - postgresql-contrib
+
+- name: Start PostgreSQL service
+  systemd:
+    name: postgresql
+    state: started
+    enabled: yes

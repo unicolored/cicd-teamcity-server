@@ -1,0 +1,118 @@
+version: '3.4'
+services:
+  proxy:
+    image: nginx:latest
+    container_name: proxy
+    restart: always
+    volumes:
+      - /home/{{host_user}}/proxy/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /home/{{host_user}}/proxy/nginx/conf.d:/etc/nginx/conf.d
+      - /home/{{host_user}}/proxy/nginx/sites-enabled:/etc/nginx/sites-enabled
+      - /var/www/html:/usr/share/nginx/html
+      - /var/log/nginx:/var/log/nginx
+      - /home/{{host_user}}/proxy/certs/{{project}}/public.key:/etc/ssl/certs/public.key
+      - /home/{{host_user}}/proxy/certs/{{project}}/private.key:/etc/ssl/private/private.key
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      teamcity:
+        ipv4_address: 192.168.176.80
+  teamcity-server:
+    container_name: server
+    image: jetbrains/teamcity-server:2023.11.3
+    restart: always
+    environment:
+      TEAMCITY_SERVER_MEM_OPTS: "-Xmx2048m" # Limit memory usage
+    ports:
+      - "8111:8111"
+    networks:
+      teamcity:
+        ipv4_address: 192.168.176.81
+    volumes:
+      - volume_server_data:/data/teamcity_server/datadir
+      - volume_server_logs:/opt/teamcity/logs
+      - /home/{{host_user}}/server.xml:/opt/teamcity/conf/server.xml
+      - /home/{{host_user}}/server.database.properties:/data/teamcity_server/datadir/config/database.properties
+  teamcity-agent:
+    #image: jetbrains/teamcity-agent
+    #image: teamcity-custom-agent
+    container_name: agent
+    restart: always
+    build:
+      context: /home/{{host_user}}/agent
+      dockerfile: agent.Dockerfile
+      network: host
+    networks:
+      teamcity:
+        ipv4_address: 192.168.176.60
+    volumes:
+      #- volume_agent:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent_regular:/data/teamcity_agent/conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/buildagent/work:/opt/buildagent/work \
+      - /opt/buildagent/temp:/opt/buildagent/temp \
+      - /opt/buildagent/tools:/opt/buildagent/tools \
+      - /opt/buildagent/plugins:/opt/buildagent/plugins \
+      - /opt/buildagent/system:/opt/buildagent/system \
+    environment:
+      SERVER_URL: http://teamcity-server:8111
+      AGENT_NAME: regular_agent
+      DOCKER_IN_DOCKER: start
+    privileged: true
+    user: root
+  teamcity-agent-php:
+    container_name: agent-php
+    restart: always
+    build:
+      context: /home/{{host_user}}/agent
+      dockerfile: agent.php.Dockerfile
+      network: host
+    networks:
+      teamcity:
+        ipv4_address: 192.168.176.61
+    volumes:
+      #- volume_agent_php:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent_php:/data/teamcity_agent/conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/buildagent/work:/opt/buildagent/work \
+      - /opt/buildagent/temp:/opt/buildagent/temp \
+      - /opt/buildagent/tools:/opt/buildagent/tools \
+      - /opt/buildagent/plugins:/opt/buildagent/plugins \
+      - /opt/buildagent/system:/opt/buildagent/system \
+    environment:
+      SERVER_URL: http://teamcity-server:8111
+      AGENT_NAME: php_agent
+      DOCKER_IN_DOCKER: start
+    privileged: true
+    user: root
+#  database:
+#    image: postgres:13
+#    container_name: database
+#    restart: always
+#    networks:
+#      teamcity:
+#        ipv4_address: 192.168.176.32
+#    environment:
+#      POSTGRES_USER: teamcity
+#      POSTGRES_PASSWORD: teamcitypwd
+#      PGDATA: /var/lib/postgresql/data/pgdata
+#    volumes:
+#      - volume_postgresql:/var/lib/postgresql/data
+#    ports:
+#      - "5432:5432"
+networks:
+  teamcity:
+    ipam:
+      driver: default
+      config:
+        - subnet: "192.168.176.0/20"
+volumes:
+  volume_server_data:
+    external: true
+  volume_server_logs:
+    external: true
+  volume_agent:
+    external: true
+  volume_postgresql:
+    external: true

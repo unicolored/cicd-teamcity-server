@@ -1,0 +1,24 @@
+version: '3'
+services:
+  teamcity-agent:
+    # Use an official image or the custom build below
+    #image: jetbrains/teamcity-agent:2023.11.2
+    build:
+      # Must be absolute path to the ./teamcity-agent/docker directory
+      # context: <absolute path on your disk>/docker
+      dockerfile: agent.custom.Dockerfile
+    volumes:
+      - ./volumes/agent:/data/teamcity_agent/conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/buildagent/work:/opt/buildagent/work \
+      - /opt/buildagent/temp:/opt/buildagent/temp \
+      - /opt/buildagent/tools:/opt/buildagent/tools \
+      - /opt/buildagent/plugins:/opt/buildagent/plugins \
+      - /opt/buildagent/system:/opt/buildagent/system \
+    environment:
+      # URL of the TeamCity server - Replace with your own server URL
+      # SERVER_URL: http://teamcity-server:8111
+      AGENT_NAME: local_agent
+      DOCKER_IN_DOCKER: start
+    privileged: true
+    user: root
