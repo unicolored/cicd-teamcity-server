@@ -3,8 +3,8 @@ FROM jetbrains/teamcity-agent:2023.11.3
 WORKDIR /home/buildagent
 
 # SETUP AWS CLI
-COPY secrets/.aws /home/buildagent/.aws
-COPY secrets/.aws /root/.aws
+COPY secrets/aws /home/buildagent/.aws
+COPY secrets/aws /root/.aws
 
 RUN whoami
 RUN pwd
