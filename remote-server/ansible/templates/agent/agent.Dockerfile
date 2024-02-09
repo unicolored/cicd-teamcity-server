@@ -27,8 +27,8 @@ RUN /usr/local/bin/aws --version
 # ADD SSH KEYS
 USER root
 RUN mkdir /root/.ssh
-COPY ssh_key/teamcity /root/.ssh/id_rsa
-COPY ssh_key/teamcity.pub /root/.ssh/id_rsa.pub
+COPY secrets/ssh_key/teamcity /root/.ssh/id_rsa
+COPY secrets/ssh_key/teamcity.pub /root/.ssh/id_rsa.pub
 RUN chown root:root /root/.ssh/id_rsa
 
 # INSTALL ANSIBLE
