@@ -1,2 +1,2 @@
 #! /bin/bash
-sudo docker exec -it agent bash
+sudo docker exec -it agent_zero bash

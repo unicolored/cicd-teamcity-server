@@ -61,6 +61,18 @@
                 - "agent-files"
             tags: ['copy_files']
 
+        -   name: "Copy template for server"
+            become: true
+            template:
+                src: "templates/server-files/{{item}}"
+                dest: "/home/{{host_user}}/server-files"
+                owner: "{{host_user}}"
+                group: "{{host_user}}"
+                mode: 'u=rwx,g=r,o=r'
+            loop:
+                - "server.database.properties"
+            tags: ['copy_files']
+
 
         -   name: "Container Proxy"
             include_tasks: "tasks/container-proxy.yml"

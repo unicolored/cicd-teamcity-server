@@ -45,9 +45,10 @@ services:
       teamcity:
         ipv4_address: 192.168.176.60
     volumes:
-      #- volume_agent:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
+      #- volume_agent:/data/teamcity_agent/conf
+      #- /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent-files:/home/buildagent/agent-files
       #- /opt/buildagent/work:/opt/buildagent/work \
       #- /opt/buildagent/temp:/opt/buildagent/temp \
       #- /opt/buildagent/tools:/opt/buildagent/tools \
@@ -70,9 +71,10 @@ services:
       teamcity:
         ipv4_address: 192.168.176.61
     volumes:
-      #- volume_agent:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
+      #- volume_agent:/data/teamcity_agent/conf
+      #- /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent-files:/home/buildagent/agent-files
       #- /opt/buildagent/work:/opt/buildagent/work \
       #- /opt/buildagent/temp:/opt/buildagent/temp \
       #- /opt/buildagent/tools:/opt/buildagent/tools \
