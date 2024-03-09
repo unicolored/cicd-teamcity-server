@@ -34,8 +34,8 @@ services:
       - volume_server_logs:/opt/teamcity/logs
       - /home/{{host_user}}/server/server.xml:/opt/teamcity/conf/server.xml
       - /home/{{host_user}}/server/server.database.properties:/data/teamcity_server/datadir/config/database.properties
-  agent:
-    container_name: agent
+  agent_zero:
+    container_name: agent_zero
     restart: always
     build:
       context: /home/{{host_user}}/agent
@@ -59,8 +59,8 @@ services:
       DOCKER_IN_DOCKER: start
     privileged: true
     user: root
-  agent-php:
-    container_name: agent-php
+  agent_one:
+    container_name: agent_one
     restart: always
     build:
       context: /home/{{host_user}}/agent
@@ -80,7 +80,7 @@ services:
       #- /opt/buildagent/system:/opt/buildagent/system \
     environment:
       SERVER_URL: http://server:8111
-      AGENT_NAME: agent_php
+      AGENT_NAME: agent_one
       DOCKER_IN_DOCKER: start
     privileged: true
     user: root
