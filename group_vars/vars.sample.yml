@@ -3,6 +3,7 @@ debian_release: bookworm
 host_user: debian
 project: teamcity
 docker_compose_version: v2.23.0
+node_version: node_20.x
 aws_access_key_id: "{{vault_aws_access_key_id}}"
 aws_secret_access_key: "{{vault_aws_secret_access_key}}"
 agent_aws_access_key_id: "{{vault_agent_aws_access_key_id}}"
