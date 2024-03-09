@@ -96,3 +96,4 @@
       owner: "{{host_user}}"
       group: "{{host_user}}"
       mode: '0755'
+-   tags: ['docker-compose']
