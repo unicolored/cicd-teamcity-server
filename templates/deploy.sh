@@ -8,9 +8,9 @@ docker-compose down
 #
 #aws ecr get-login-password --region eu-west-1 | docker login --username AWS --password-stdin $ECR_REPO
 
-docker-compose up --build -d
+docker-compose up --build --remove-orphans -d
 
-docker exec -it agent sh -c "yarn set version stable"
-docker exec -it agent sh -c "yarn set version latest"
+#docker exec -it agent sh -c "yarn set version stable"
+#docker exec -it agent sh -c "yarn set version latest"
 
 docker logs proxy
