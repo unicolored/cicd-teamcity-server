@@ -32,13 +32,13 @@ services:
     volumes:
       - volume_server_data:/data/teamcity_server/datadir
       - volume_server_logs:/opt/teamcity/logs
-      - /home/{{host_user}}/server/server.xml:/opt/teamcity/conf/server.xml
-      - /home/{{host_user}}/server/server.database.properties:/data/teamcity_server/datadir/config/database.properties
+      - /home/{{host_user}}/server-files/server.xml:/opt/teamcity/conf/server.xml
+      - /home/{{host_user}}/server-files/server.database.properties:/data/teamcity_server/datadir/config/database.properties
   agent_zero:
     container_name: agent_zero
     restart: always
     build:
-      context: /home/{{host_user}}/agent
+      context: /home/{{host_user}}/agent-files
       dockerfile: agent.zero.Dockerfile
       network: host
     networks:
@@ -46,7 +46,7 @@ services:
         ipv4_address: 192.168.176.60
     volumes:
       #- volume_agent:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
       #- /opt/buildagent/work:/opt/buildagent/work \
       #- /opt/buildagent/temp:/opt/buildagent/temp \
@@ -63,7 +63,7 @@ services:
     container_name: agent_one
     restart: always
     build:
-      context: /home/{{host_user}}/agent
+      context: /home/{{host_user}}/agent-files
       dockerfile: agent.zero.Dockerfile
       network: host
     networks:
@@ -71,7 +71,7 @@ services:
         ipv4_address: 192.168.176.61
     volumes:
       #- volume_agent:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent-files:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
       #- /opt/buildagent/work:/opt/buildagent/work \
       #- /opt/buildagent/temp:/opt/buildagent/temp \

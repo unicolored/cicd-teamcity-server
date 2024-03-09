@@ -28,35 +28,38 @@
                 mode: '0755'
             loop: [ 'deploy', 'server', 'agent', 'proxy' ]
 
-        -   name: "Copy files for agent"
-            become: true
-            copy:
-                src: "templates/agent"
-                dest: "/home/{{host_user}}"
-                owner: "{{host_user}}"
-                group: "{{host_user}}"
-                mode: 'u=rwx,g=r,o=r'
-
-        -   name: "Copy files for server"
-            become: true
-            copy:
-                src: "templates/server"
-                dest: "/home/{{host_user}}"
-                owner: "{{host_user}}"
-                group: "{{host_user}}"
-                mode: 'u=rwx,g=r,o=r'
-
-#        -   name: "Copy files for server"
+#        -   name: "Copy files for agent"
 #            become: true
-#            template:
-#                src: "templates/server/{{item}}"
-#                dest: "/home/{{host_user}}/server/{{item}}"
+#            copy:
+#                src: "templates/agent"
+#                dest: "/home/{{host_user}}"
 #                owner: "{{host_user}}"
 #                group: "{{host_user}}"
 #                mode: 'u=rwx,g=r,o=r'
-#            loop:
-#                - "server.xml"
-#                - "server.database.properties"
+#            tags: ['copy_files']
+#
+#        -   name: "Copy files for server"
+#            become: true
+#            copy:
+#                src: "templates/server"
+#                dest: "/home/{{host_user}}"
+#                owner: "{{host_user}}"
+#                group: "{{host_user}}"
+#                mode: 'u=rwx,g=r,o=r'
+#            tags: ['copy_files']
+
+        -   name: "Copy directories for server and agent"
+            become: true
+            copy:
+                src: "templates/{{item}}"
+                dest: "/home/{{host_user}}"
+                owner: "{{host_user}}"
+                group: "{{host_user}}"
+                mode: 'u=rwx,g=r,o=r'
+            loop:
+                - "server-files"
+                - "agent-files"
+            tags: ['copy_files']
 
 
         -   name: "Container Proxy"
