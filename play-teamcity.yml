@@ -32,25 +32,16 @@
             become: true
             copy:
                 src: "templates/agent"
-                dest: "/home/{{host_user}}/agent"
+                dest: "/home/{{host_user}}"
                 owner: "{{host_user}}"
                 group: "{{host_user}}"
                 mode: 'u=rwx,g=r,o=r'
-
-#        -   name: "Copy files for teamcity agent_php context"
-#            become: true
-#            copy:
-#                src: "templates/agent"
-#                dest: "/home/{{host_user}}/agent_php"
-#                owner: "{{host_user}}"
-#                group: "{{host_user}}"
-#                mode: 'u=rwx,g=r,o=r'
 
         -   name: "Copy files for server"
             become: true
             copy:
                 src: "templates/server"
-                dest: "/home/{{host_user}}/server"
+                dest: "/home/{{host_user}}"
                 owner: "{{host_user}}"
                 group: "{{host_user}}"
                 mode: 'u=rwx,g=r,o=r'
