@@ -1,5 +1,0 @@
-#! /bin/bash
-
-# This will download the latest version of the AWS CLI v2 used in the build of the teamcity-agent
-
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "var/awscliv2.zip"

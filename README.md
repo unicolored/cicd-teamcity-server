@@ -14,3 +14,12 @@ A PostGres database is required for the Teamcity server.
 - Add an ssh key to the agent if needed
 - Update the ansible vault variables: remote-server/ansible/group_vars/teamcity.vars.yml
 - Add public and private cert for https on the nginx proxy
+
+## Run ansible
+
+```bash
+cd remote-server/ansible
+
+# sh play.sh OR
+ansible-playbook -e @group_vars/teamcity.vault.yml --vault-password-file .vault_passwd ./play-teamcity.yml -i ./hosts.ini
+```

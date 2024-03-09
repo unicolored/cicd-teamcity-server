@@ -1,10 +1,10 @@
-FROM jetbrains/teamcity-agent:2023.11.3
+FROM jetbrains/teamcity-agent:2023.11
 
 WORKDIR /home/buildagent
 
-# SETUP AWS CLI
-COPY secrets/aws /home/buildagent/.aws
-COPY secrets/aws /root/.aws
+# AWS CLI & CREDENTIALS
+COPY secrets/.aws /home/buildagent/.aws
+COPY secrets/.aws /root/.aws
 
 RUN whoami
 RUN pwd
@@ -15,14 +15,7 @@ USER root
 RUN ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
 RUN /usr/local/bin/aws --version
 
-# SETUP DOCKER-MACHINE
-#RUN base=https://github.com/docker/machine/releases/download/v0.16.0 \
-#    && curl -L $base/docker-machine-$(uname -s)-$(uname -m) >/tmp/docker-machine \
-#    && mv /tmp/docker-machine /usr/local/bin/docker-machine \
-#    && chmod +x /usr/local/bin/docker-machine
-#RUN docker-machine
-
-# ADD SSH KEYS
+# SSH KEYS TO AUTH AS TEAMCITY AGENT
 USER root
 RUN mkdir /root/.ssh
 COPY secrets/ssh_key/teamcity /root/.ssh/id_rsa
@@ -32,24 +25,27 @@ RUN chown root:root /root/.ssh/id_rsa
 # INSTALL ANSIBLE
 ENV ANSIBLE_HOST_KEY_CHECKING False
 USER root
-RUN apt-get update && apt-get install ansible -y
+RUN apt-get update && apt-get install ansible -y && apt-get clean
 
 # UPGRADE NODEJS
 RUN curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs
+    apt-get install -y nodejs && apt-get clean
 
 # INSTALL YARN
 USER root
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install yarn -y
+RUN apt-get update && apt-get install yarn -y && apt-get clean
+RUN yarn set version stable && yarn set version latest
+
+# INSTALL FIREBASE CLI
+RUN npm install -g firebase-tools
 
 # INSTALL PHP
-
 USER root
 RUN LC_ALL=C.UTF-8 add-apt-repository ppa:ondrej/php
 
-RUN apt-get update && apt-get install -y wget curl
+RUN apt-get update && apt-get install -y wget curl && apt-get clean
 
 RUN apt-get update && apt-get install -y \
     autoconf \
@@ -60,7 +56,8 @@ RUN apt-get update && apt-get install -y \
     libc-dev \
     make \
     pkg-config \
-    re2c
+    re2c \
+    && apt-get clean
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
@@ -76,7 +73,8 @@ RUN apt-get update && apt-get install -y \
     supervisor \
     nodejs \
     htop \
-    rename
+    rename \
+    && apt-get clean
 
 ARG PHP_VERSION=8.2
 RUN apt-get update && apt-get install -y \
@@ -100,11 +98,12 @@ RUN apt-get update && apt-get install -y \
     php${PHP_VERSION}-soap \
     php${PHP_VERSION}-xml \
     php${PHP_VERSION}-xdebug \
-    php-excimer
+    php-excimer \
+    && apt-get clean
 
-RUN apt purge php8.3\* -y
+RUN apt-get purge php8.3\* -y
 
-# Composer
+# INSTALL COMPOSER
 RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     chmod +x /usr/local/bin/composer
@@ -112,4 +111,7 @@ RUN curl -sS https://getcomposer.org/installer | php && \
 RUN composer -V
 RUN composer self-update
 
+#COPY buildAgent.properties /data/teamcity_agent/conf/buildAgent.properties
+
+# Done!
 USER buildagent

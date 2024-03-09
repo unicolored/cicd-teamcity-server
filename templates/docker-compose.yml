@@ -18,7 +18,7 @@ services:
     networks:
       teamcity:
         ipv4_address: 192.168.176.80
-  teamcity-server:
+  server:
     container_name: server
     image: jetbrains/teamcity-server:2023.11.3
     restart: always
@@ -32,57 +32,55 @@ services:
     volumes:
       - volume_server_data:/data/teamcity_server/datadir
       - volume_server_logs:/opt/teamcity/logs
-      - /home/{{host_user}}/server.xml:/opt/teamcity/conf/server.xml
-      - /home/{{host_user}}/server.database.properties:/data/teamcity_server/datadir/config/database.properties
-  teamcity-agent:
-    #image: jetbrains/teamcity-agent
-    #image: teamcity-custom-agent
+      - /home/{{host_user}}/server/server.xml:/opt/teamcity/conf/server.xml
+      - /home/{{host_user}}/server/server.database.properties:/data/teamcity_server/datadir/config/database.properties
+  agent:
     container_name: agent
     restart: always
     build:
       context: /home/{{host_user}}/agent
-      dockerfile: agent.Dockerfile
+      dockerfile: agent.zero.Dockerfile
       network: host
     networks:
       teamcity:
         ipv4_address: 192.168.176.60
     volumes:
       #- volume_agent:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent_regular:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/buildagent/work:/opt/buildagent/work \
-      - /opt/buildagent/temp:/opt/buildagent/temp \
-      - /opt/buildagent/tools:/opt/buildagent/tools \
-      - /opt/buildagent/plugins:/opt/buildagent/plugins \
-      - /opt/buildagent/system:/opt/buildagent/system \
+      #- /opt/buildagent/work:/opt/buildagent/work \
+      #- /opt/buildagent/temp:/opt/buildagent/temp \
+      #- /opt/buildagent/tools:/opt/buildagent/tools \
+      #- /opt/buildagent/plugins:/opt/buildagent/plugins \
+      #- /opt/buildagent/system:/opt/buildagent/system \
     environment:
-      SERVER_URL: http://teamcity-server:8111
-      AGENT_NAME: regular_agent
+      SERVER_URL: http://server:8111
+      AGENT_NAME: agent_zero
       DOCKER_IN_DOCKER: start
     privileged: true
     user: root
-  teamcity-agent-php:
+  agent-php:
     container_name: agent-php
     restart: always
     build:
       context: /home/{{host_user}}/agent
-      dockerfile: agent.php.Dockerfile
+      dockerfile: agent.zero.Dockerfile
       network: host
     networks:
       teamcity:
         ipv4_address: 192.168.176.61
     volumes:
-      #- volume_agent_php:/data/teamcity_agent/conf
-      - /home/{{host_user}}/agent_php:/data/teamcity_agent/conf
+      #- volume_agent:/data/teamcity_agent/conf
+      - /home/{{host_user}}/agent:/data/teamcity_agent/conf
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/buildagent/work:/opt/buildagent/work \
-      - /opt/buildagent/temp:/opt/buildagent/temp \
-      - /opt/buildagent/tools:/opt/buildagent/tools \
-      - /opt/buildagent/plugins:/opt/buildagent/plugins \
-      - /opt/buildagent/system:/opt/buildagent/system \
+      #- /opt/buildagent/work:/opt/buildagent/work \
+      #- /opt/buildagent/temp:/opt/buildagent/temp \
+      #- /opt/buildagent/tools:/opt/buildagent/tools \
+      #- /opt/buildagent/plugins:/opt/buildagent/plugins \
+      #- /opt/buildagent/system:/opt/buildagent/system \
     environment:
-      SERVER_URL: http://teamcity-server:8111
-      AGENT_NAME: php_agent
+      SERVER_URL: http://server:8111
+      AGENT_NAME: agent_php
       DOCKER_IN_DOCKER: start
     privileged: true
     user: root
@@ -114,5 +112,5 @@ volumes:
     external: true
   volume_agent:
     external: true
-  volume_postgresql:
-    external: true
+#  volume_postgresql:
+#    external: true

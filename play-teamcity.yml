@@ -3,8 +3,8 @@
     become: true
     gather_facts: false
     vars_files:
-        - group_vars/teamcity.vault.yml
-        - group_vars/teamcity.vars.yml
+        - group_vars/vault.yml
+        - group_vars/vars.yml
 
     tasks:
         -   name: "Packages"
@@ -28,35 +28,44 @@
                 mode: '0755'
             loop: [ 'deploy', 'server', 'agent', 'proxy' ]
 
-        -   name: "Copy files for teamcity agent context"
+        -   name: "Copy files for agent"
             become: true
             copy:
                 src: "templates/agent"
-                dest: "/home/{{host_user}}/agent_regular"
+                dest: "/home/{{host_user}}/agent"
                 owner: "{{host_user}}"
                 group: "{{host_user}}"
                 mode: 'u=rwx,g=r,o=r'
 
-        -   name: "Copy files for teamcity agent_php context"
+#        -   name: "Copy files for teamcity agent_php context"
+#            become: true
+#            copy:
+#                src: "templates/agent"
+#                dest: "/home/{{host_user}}/agent_php"
+#                owner: "{{host_user}}"
+#                group: "{{host_user}}"
+#                mode: 'u=rwx,g=r,o=r'
+
+        -   name: "Copy files for server"
             become: true
             copy:
-                src: "templates/agent"
-                dest: "/home/{{host_user}}/agent_php"
+                src: "templates/server"
+                dest: "/home/{{host_user}}/server"
                 owner: "{{host_user}}"
                 group: "{{host_user}}"
                 mode: 'u=rwx,g=r,o=r'
 
-        -   name: "Copy files"
-            become: true
-            template:
-                src: "templates/{{item}}"
-                dest: "/home/{{host_user}}/{{item}}"
-                owner: "{{host_user}}"
-                group: "{{host_user}}"
-                mode: 'u=rwx,g=r,o=r'
-            loop:
-                - "server.xml"
-                - "server.database.properties"
+#        -   name: "Copy files for server"
+#            become: true
+#            template:
+#                src: "templates/server/{{item}}"
+#                dest: "/home/{{host_user}}/server/{{item}}"
+#                owner: "{{host_user}}"
+#                group: "{{host_user}}"
+#                mode: 'u=rwx,g=r,o=r'
+#            loop:
+#                - "server.xml"
+#                - "server.database.properties"
 
 
         -   name: "Container Proxy"

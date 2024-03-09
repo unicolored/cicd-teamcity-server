@@ -1,0 +1,24 @@
+version: '3'
+services:
+  agent:
+    # docker-compose file to be used to start an extra agent locally
+    build:
+      # Fill the be absolute path
+      # context: <absolute path>/remote-server/ansible/templates/agent
+      dockerfile: agent.zero.Dockerfile
+    volumes:
+      #- ./volumes/agent:/data/teamcity_agent/conf
+      - .:/data/teamcity_agent/conf
+      - /var/run/docker.sock:/var/run/docker.sock
+      #- /opt/buildagent/work:/opt/buildagent/work \
+      #- /opt/buildagent/temp:/opt/buildagent/temp \
+      #- /opt/buildagent/tools:/opt/buildagent/tools \
+      #- /opt/buildagent/plugins:/opt/buildagent/plugins \
+      #- /opt/buildagent/system:/opt/buildagent/system \
+    environment:
+      # URL of the TeamCity server - Replace with your own server URL
+      #SERVER_URL: http://server:8111
+      AGENT_NAME: agent_one
+      DOCKER_IN_DOCKER: start
+    privileged: true
+    user: root
