@@ -1,4 +1,4 @@
-FROM jetbrains/teamcity-agent:2023.11
+FROM jetbrains/teamcity-agent:2023.11.4
 
 WORKDIR /home/buildagent
 

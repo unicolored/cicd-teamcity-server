@@ -20,7 +20,7 @@ services:
         ipv4_address: 192.168.176.80
   server:
     container_name: server
-    image: jetbrains/teamcity-server:2023.11
+    image: jetbrains/teamcity-server:2023.11.4
     restart: always
     environment:
       TEAMCITY_SERVER_MEM_OPTS: "-Xmx2048m" # Limit memory usage
