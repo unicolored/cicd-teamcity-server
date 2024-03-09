@@ -8,7 +8,8 @@ services:
       dockerfile: agent.zero.Dockerfile
     volumes:
       #- ./volumes/agent:/data/teamcity_agent/conf
-      - .:/data/teamcity_agent/conf
+      #- .:/data/teamcity_agent/conf
+      - ./:/home/buildagent/agent-files
       - /var/run/docker.sock:/var/run/docker.sock
       #- /opt/buildagent/work:/opt/buildagent/work \
       #- /opt/buildagent/temp:/opt/buildagent/temp \
