@@ -85,7 +85,7 @@ services:
       - /home/{{host_user}}/pgadmin/servers.json:/pgadmin4/servers.json
     networks:
       pgadmin:
-        ipv4_address: 192.168.133.33
+        ipv4_address: 192.168.128.33
   strapi:
     image: elestio/strapi-production:latest
     restart: always
@@ -139,7 +139,7 @@ services:
       - "9930:1337"
     networks:
       strapi:
-        ipv4_address: 192.168.220.22
+        ipv4_address: 192.168.208.22
 networks:
   teamcity:
     ipam:
@@ -150,12 +150,12 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: "192.168.220.0/20"
+        - subnet: "192.168.208.0/20"
   pgadmin:
     ipam:
       driver: default
       config:
-        - subnet: "192.168.133.0/20"
+        - subnet: "192.168.128.0/20"
 secrets:
   strapi_admin_password:
     file: strapi/secrets/strapi_admin_password.txt
