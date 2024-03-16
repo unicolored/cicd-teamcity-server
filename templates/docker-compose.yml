@@ -89,10 +89,10 @@ services:
   strapi:
     image: elestio/strapi-${NODE_ENV}:latest
     restart: always
-    env_file: .env
+    env_file: strapi/.env
     environment:
       DATABASE_CLIENT: ${DATABASE_CLIENT}
-      DATABASE_HOST: db
+      DATABASE_HOST: ${DATABASE_HOST}
       DATABASE_PORT: ${DATABASE_PORT}
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
