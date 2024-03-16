@@ -1,0 +1,31 @@
+---
+-   hosts: "teamcity"
+    become: true
+    gather_facts: false
+    vars_files:
+        - group_vars/vault.yml
+        - group_vars/vars.yml
+
+    tasks:
+        -   name: "Packages"
+            include_tasks: "tasks/packages.yml"
+
+        -   name: "Docker"
+            include_tasks: "tasks/docker.yml"
+
+        -   name: "Firewall"
+            include_tasks: "tasks/firewall.yml"
+
+        -   name: "POSTGRESQL"
+            include_tasks: "tasks/postgresql.yml"
+
+        -   name: "Apps"
+            include_tasks: "tasks/apps.yml"
+
+        -   name: "Container Proxy"
+            include_tasks: "tasks/container-proxy.yml"
+
+    handlers:
+        -   name: "restart sshd"
+            become: true
+            service: name=sshd state=restarted

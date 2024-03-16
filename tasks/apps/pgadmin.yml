@@ -1,0 +1,19 @@
+# PGADMIN
+-   debug:
+      msg: 🚧 PGADMIN
+
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/pgadmin
+        state: directory
+        mode: '0755'
+
+#-   name: Copy scripts
+#    template:
+#      src: "templates-pgadmin/{{ item }}.sh"
+#      dest: "/home/{{host_user}}/{{ item }}.sh"
+#      owner: "{{host_user}}"
+#      group: "{{host_user}}"
+#      mode: '0755'
+#    loop: [ 'deploy', 'server', 'agent', 'proxy' ]
+

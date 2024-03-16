@@ -1,0 +1,28 @@
+# TEAMCITY
+-   debug:
+      msg: 🚧 TEAMCITY
+
+-   name: "Copy directories for server and agent"
+    become: true
+    copy:
+      src: "templates-teamcity/{{item}}"
+      dest: "/home/{{host_user}}"
+      owner: "{{host_user}}"
+      group: "{{host_user}}"
+      mode: 'u=rwx,g=r,o=r'
+    loop:
+      - "server-files"
+      - "agent-files"
+    tags: ['copy_files']
+
+-   name: "Copy template for server"
+    become: true
+    template:
+      src: "templates-teamcity/server-files/{{item}}"
+      dest: "/home/{{host_user}}/server-files"
+      owner: "{{host_user}}"
+      group: "{{host_user}}"
+      mode: 'u=rwx,g=r,o=r'
+    loop:
+      - "server.database.properties"
+    tags: ['copy_files']

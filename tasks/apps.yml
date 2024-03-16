@@ -1,0 +1,21 @@
+# APPS
+- debug:
+    msg: 💾 APPS
+
+-   name: Copy scripts
+    template:
+        src: "templates/{{ item }}.sh"
+        dest: "/home/{{host_user}}/{{ item }}.sh"
+        owner: "{{host_user}}"
+        group: "{{host_user}}"
+        mode: '0755'
+    loop: [ 'deploy', 'server', 'agent', 'proxy' ]
+
+-   name: "TeamCity"
+    include_tasks: "apps/teamcity.yml"
+
+-   name: "Strapi"
+    include_tasks: "apps/strapi.yml"
+
+-   name: "PgAdmin"
+    include_tasks: "apps/pgadmin.yml"

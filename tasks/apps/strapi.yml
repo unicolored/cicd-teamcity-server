@@ -1,0 +1,35 @@
+# STRAPI
+-   debug:
+      msg: 🚧 STRAPI
+
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/strapi
+        state: directory
+        mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/strapi/config
+        state: directory
+        mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/strapi/src
+        state: directory
+        mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/strapi/public/uploads
+        state: directory
+        mode: '0755'
+
+- name: "Copy .env for strapi"
+  template:
+        src: templates-strapi/.env
+        dest: "/home/{{host_user}}/strapi/.env"
+        owner: "{{host_user}}"
+        group: "{{host_user}}"
+        mode: '0755'

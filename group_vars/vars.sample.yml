@@ -8,8 +8,24 @@ aws_access_key_id: "{{vault_aws_access_key_id}}"
 aws_secret_access_key: "{{vault_aws_secret_access_key}}"
 agent_aws_access_key_id: "{{vault_agent_aws_access_key_id}}"
 agent_aws_secret_access_key_id: "{{vault_agent_aws_secret_access_key_id}}"
+
 postgresql_user: "{{vault_postgresql_user}}"
 postgresql_password: "{{vault_postgresql_password}}"
 postgresql_host: "{{vault_postgresql_host}}"
 postgresql_port: "{{vault_postgresql_port}}"
 postgresql_database: "{{vault_postgresql_database}}"
+
+strapi_admin_password: "{{vault_strapi_admin_password}}" # your-password
+strapi_admin_email: "{{vault_strapi_admin_email}}" # your@email.com
+strapi_base_url: "{{vault_strapi_base_url}}" # https://your.domain
+
+strapi_smtp_host: "{{vault_strapi_smtp_host}}" # 172.17.0.1
+strapi_smtp_port: "{{vault_strapi_smtp_port}}" # 25
+strapi_smtp_auth_strategy: "{{vault_strapi_smtp_auth_strategy}}" # NONE
+strapi_smtp_from_email: "{{vault_strapi_smtp_from_email}}" # sender@email.com
+
+strapi_jwt_secret: "{{vault_strapi_jwt_secret}}" # your-password
+strapi_admin_jwt_secret: "{{vault_strapi_admin_jwt_secret}}" # your-password
+strapi_app_keys: "{{vault_strapi_app_keys}}" # your-password
+strapi_api_token_salt: "{{vault_strapi_api_token_salt}}" # your-password
+strapi_transfer_token_salt: "{{vault_strapi_transfer_token_salt}}" # your-password
