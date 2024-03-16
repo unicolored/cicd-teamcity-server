@@ -87,7 +87,7 @@ services:
       pgadmin:
         ipv4_address: 192.168.133.33
   strapi:
-    image: elestio/strapi-${NODE_ENV}:latest
+    image: elestio/strapi-production:latest
     restart: always
     environment:
       DATABASE_CLIENT: postgres
