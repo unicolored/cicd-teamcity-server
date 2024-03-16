@@ -5,6 +5,8 @@
 - name: Create a directory if it does not exist
   file:
         path: /home/{{host_user}}/strapi
+        owner: "{{host_user}}"
+        group: "{{host_user}}"
         state: directory
         mode: '0755'
 
@@ -33,3 +35,24 @@
         owner: "{{host_user}}"
         group: "{{host_user}}"
         mode: '0755'
+
+- name: "Copy entrypoint.sh for strapi"
+  template:
+        src: templates-strapi/entrypoint.sh
+        dest: "/home/{{host_user}}/strapi/entrypoint.sh"
+        owner: "{{host_user}}"
+        group: "{{host_user}}"
+        mode: '0755'
+
+-   name: "Copy directories for config"
+    become: true
+    copy:
+          src: "templates-strapi/{{item}}"
+          dest: "/home/{{host_user}}"
+          owner: "{{host_user}}"
+          group: "{{host_user}}"
+          mode: 'u=rwx,g=r,o=r'
+    loop:
+          - "server-files"
+          - "agent-files"
+    tags: ['config']
