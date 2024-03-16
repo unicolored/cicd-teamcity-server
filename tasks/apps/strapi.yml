@@ -53,6 +53,5 @@
           group: "{{host_user}}"
           mode: 'u=rwx,g=r,o=r'
     loop:
-          - "server-files"
-          - "agent-files"
-    tags: ['config']
+          - "config"
+    tags: ['copy-files']

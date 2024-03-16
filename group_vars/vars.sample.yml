@@ -15,6 +15,10 @@ postgresql_host: "{{vault_postgresql_host}}"
 postgresql_port: "{{vault_postgresql_port}}"
 postgresql_database: "{{vault_postgresql_database}}"
 
+postgresql_user_two: "{{vault_postgresql_user_two}}"
+postgresql_password_two: "{{vault_postgresql_password_two}}"
+postgresql_database_two: "{{vault_postgresql_database_two}}"
+
 strapi_admin_password: "{{vault_strapi_admin_password}}" # your-password
 strapi_admin_email: "{{vault_strapi_admin_email}}" # your@email.com
 strapi_base_url: "{{vault_strapi_base_url}}" # https://your.domain
