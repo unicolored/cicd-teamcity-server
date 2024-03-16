@@ -8,6 +8,22 @@
         state: directory
         mode: '0755'
 
+- name: Create a directory if it does not exist
+  file:
+        path: /home/{{host_user}}/pgadmin/secrets
+        state: directory
+        mode: '0755'
+
+-   name: "Copy secrets"
+    template:
+      src: "{{ item.path }}"
+      dest: "{{ target_dir }}/{{ item.path }}"
+    with_community.general.filetree:
+      path: "templates-pgadmin/secrets"
+    vars:
+      target_dir: "/home/{{host_user}}/pgadmin/secrets"
+
+
 #-   name: Copy scripts
 #    template:
 #      src: "templates-pgadmin/{{ item }}.sh"

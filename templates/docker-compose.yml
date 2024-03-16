@@ -76,8 +76,8 @@ services:
     image: dpage/pgadmin4:latest
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: ${ADMIN_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${ADMIN_PASSWORD}
+      PGADMIN_DEFAULT_EMAIL: run/secrets/pgadmin_admin_email
+      PGADMIN_DEFAULT_PASSWORD: run/secrets/pgadmin_admin_password
       PGADMIN_LISTEN_PORT: 8080
     ports:
       - "8089:8080"
@@ -89,7 +89,6 @@ services:
   strapi:
     image: elestio/strapi-${NODE_ENV}:latest
     restart: always
-    env_file: strapi/.env
     environment:
       DATABASE_CLIENT: postgres
       NODE_ENV: production
@@ -192,6 +191,10 @@ secrets:
     file: strapi/secrets/strapi_api_token_salt.txt
   strapi_transfer_token_salt:
     file: strapi/secrets/strapi_transfer_token_salt.txt
+  pgadmin_admin_email:
+    file: pgadmin/secrets/pgadmin_admin_email.txt
+  pgadmin_admin_password:
+    file: pgadmin/secrets/pgadmin_admin_password.txt
 volumes:
   volume_server_data:
     external: true

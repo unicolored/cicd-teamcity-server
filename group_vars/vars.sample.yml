@@ -33,3 +33,6 @@ strapi_admin_jwt_secret: "{{vault_strapi_admin_jwt_secret}}" # your-password
 strapi_app_keys: "{{vault_strapi_app_keys}}" # your-password
 strapi_api_token_salt: "{{vault_strapi_api_token_salt}}" # your-password
 strapi_transfer_token_salt: "{{vault_strapi_transfer_token_salt}}" # your-password
+
+pgadmin_admin_email: "{{vault_pgadmin_admin_email}}" # your-email
+pgadmin_admin_password: "{{vault_pgadmin_admin_password}}" # your-password
