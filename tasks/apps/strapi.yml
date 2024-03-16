@@ -18,6 +18,12 @@
 
 - name: Create a directory if it does not exist
   file:
+        path: /home/{{host_user}}/strapi/secrets
+        state: directory
+        mode: '0755'
+
+- name: Create a directory if it does not exist
+  file:
         path: /home/{{host_user}}/strapi/src
         state: directory
         mode: '0755'
@@ -44,9 +50,9 @@
         group: "{{host_user}}"
         mode: '0755'
 
--   name: "Copy directories for config and secrets"
+-   name: "Copy directories for config"
     become: true
-    template:
+    copy:
           src: "templates-strapi/{{item}}"
           dest: "/home/{{host_user}}"
           owner: "{{host_user}}"
@@ -54,5 +60,21 @@
           mode: 'u=rwx,g=r,o=r'
     loop:
           - "config"
-          - "secrets"
     tags: ['copy-files']
+
+#-   name: "Copy secrets"
+#    template:
+#      src: "templates-strapi/secrets/{{ item }}"
+#      dest: "/home/{{host_user}}/secrets/{{ item | basename | regex_replace('\\.txt', '') }}"
+#    with_fileglob:
+#      - "./templates-strapi/secrets/*.txt"
+#    tags: ['copy-files']
+
+-   name: "Copy secrets"
+    template:
+      src: "{{ item.path }}"
+      dest: "{{ target_dir }}/{{ item.path }}"
+    with_community.general.filetree:
+      path: "templates-strapi/secrets"
+    vars:
+      target_dir: "/home/{{host_user}}/secrets"
