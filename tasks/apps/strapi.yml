@@ -44,9 +44,9 @@
         group: "{{host_user}}"
         mode: '0755'
 
--   name: "Copy directories for config"
+-   name: "Copy directories for config and secrets"
     become: true
-    copy:
+    template:
           src: "templates-strapi/{{item}}"
           dest: "/home/{{host_user}}"
           owner: "{{host_user}}"
@@ -54,4 +54,5 @@
           mode: 'u=rwx,g=r,o=r'
     loop:
           - "config"
+          - "secrets"
     tags: ['copy-files']

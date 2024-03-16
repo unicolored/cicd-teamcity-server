@@ -91,16 +91,43 @@ services:
     restart: always
     env_file: strapi/.env
     environment:
-      DATABASE_CLIENT: ${DATABASE_CLIENT}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_PORT: ${DATABASE_PORT}
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USERNAME: ${DATABASE_USERNAME}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      JWT_SECRET: ${JWT_SECRET}
-      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET}
-      APP_KEYS: ${APP_KEYS}
-      NODE_ENV: ${NODE_ENV}
+      DATABASE_CLIENT: postgres
+      NODE_ENV: production
+      ADMIN_PASSWORD: run/secrets/strapi_admin_password
+      ADMIN_EMAIL: run/secrets/strapi_admin_email
+      BASE_URL: run/secrets/strapi_base_url
+      SMTP_HOST: run/secrets/strapi_smtp_host
+      SMTP_PORT: run/secrets/strapi_smtp_port
+      SMTP_AUTH_STRATEGY: run/secrets/strapi_smtp_auth_strategy
+      SMTP_FROM_EMAIL: run/secrets/strapi_smtp_from_email
+      DATABASE_USERNAME: run/secrets/strapi_database_username
+      DATABASE_PASSWORD: run/secrets/strapi_database_password
+      DATABASE_HOST: run/secrets/strapi_database_host
+      DATABASE_PORT: run/secrets/strapi_database_port
+      DATABASE_NAME: run/secrets/strapi_database_name
+      JWT_SECRET: run/secrets/strapi_jwt_secret
+      ADMIN_JWT_SECRET: run/secrets/strapi_admin_jwt_secret
+      APP_KEYS: run/secrets/strapi_app_keys
+      API_TOKEN_SALT: run/secrets/strapi_api_token_salt
+      TRANSFER_TOKEN_SALT: run/secrets/strapi_transfer_token_salt
+    secrets:
+      - strapi_admin_password
+      - strapi_admin_email
+      - strapi_base_url
+      - strapi_smtp_host
+      - strapi_smtp_port
+      - strapi_smtp_auth_strategy
+      - strapi_smtp_from_email
+      - strapi_database_username
+      - strapi_database_password
+      - strapi_database_host
+      - strapi_database_port
+      - strapi_database_name
+      - strapi_jwt_secret
+      - strapi_admin_jwt_secret
+      - strapi_app_keys
+      - strapi_api_token_salt
+      - strapi_transfer_token_salt
     volumes:
       - /home/{{host_user}}/strapi/config:/opt/app/config
       - /home/{{host_user}}/strapi/src:/opt/app/src
@@ -130,6 +157,41 @@ networks:
       driver: default
       config:
         - subnet: "192.168.133.0/20"
+secrets:
+  strapi_admin_password:
+    file: strapi/secrets/strapi_admin_password.txt
+  strapi_admin_email:
+    file: strapi/secrets/strapi_admin_email.txt
+  strapi_base_url:
+    file: strapi/secrets/strapi_base_url.txt
+  strapi_smtp_host:
+    file: strapi/secrets/strapi_smtp_host.txt
+  strapi_smtp_port:
+    file: strapi/secrets/strapi_smtp_port.txt
+  strapi_smtp_auth_strategy:
+    file: strapi/secrets/strapi_smtp_auth_strategy.txt
+  strapi_smtp_from_email:
+    file: strapi/secrets/strapi_smtp_from_email.txt
+  strapi_database_username:
+    file: strapi/secrets/strapi_database_username.txt
+  strapi_database_password:
+    file: strapi/secrets/strapi_database_password.txt
+  strapi_database_host:
+    file: strapi/secrets/strapi_database_host.txt
+  strapi_database_port:
+    file: strapi/secrets/strapi_database_port.txt
+  strapi_database_name:
+    file: strapi/secrets/strapi_database_name.txt
+  strapi_jwt_secret:
+    file: strapi/secrets/strapi_jwt_secret.txt
+  strapi_admin_jwt_secret:
+    file: strapi/secrets/strapi_admin_jwt_secret.txt
+  strapi_app_keys:
+    file: strapi/secrets/strapi_app_keys.txt
+  strapi_api_token_salt:
+    file: strapi/secrets/strapi_api_token_salt.txt
+  strapi_transfer_token_salt:
+    file: strapi/secrets/strapi_transfer_token_salt.txt
 volumes:
   volume_server_data:
     external: true
