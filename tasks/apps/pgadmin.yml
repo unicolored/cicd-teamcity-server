@@ -14,22 +14,14 @@
         state: directory
         mode: '0755'
 
--   name: "Copy secrets"
+-   name: "Copy template for servers"
+    become: true
     template:
-      src: "{{ item.path }}"
-      dest: "{{ target_dir }}/{{ item.path }}"
-    with_community.general.filetree:
-      path: "templates-pgadmin/secrets"
-    vars:
-      target_dir: "/home/{{host_user}}/pgadmin/secrets"
-
-
-#-   name: Copy scripts
-#    template:
-#      src: "templates-pgadmin/{{ item }}.sh"
-#      dest: "/home/{{host_user}}/{{ item }}.sh"
-#      owner: "{{host_user}}"
-#      group: "{{host_user}}"
-#      mode: '0755'
-#    loop: [ 'deploy', 'server', 'agent', 'proxy' ]
-
+      src: "templates-pgadmin/{{item}}"
+      dest: "/home/{{host_user}}/pgadmin"
+      owner: "{{host_user}}"
+      group: "{{host_user}}"
+      mode: 'u=rwx,g=r,o=r'
+    loop:
+      - "servers.json"
+    tags: ['copy_files']

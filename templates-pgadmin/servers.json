@@ -1,0 +1,24 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "teamcity",
+      "Group": "devops",
+      "Host": "{{postgresql_host}}",
+      "Port": "{{postgresql_port}}",
+      "MaintenanceDB": "{{postgresql_database}}",
+      "Username": "{{postgresql_user}}",
+      "Password": "{{postgresql_password}}",
+      "SSLMode": "verify-full"
+    },
+    "2": {
+      "Name": "strapi",
+      "Group": "devops",
+      "Host": "{{postgresql_host}}",
+      "Port": "{{postgresql_port}}",
+      "MaintenanceDB": "{{postgresql_database_two}}",
+      "Username": "{{postgresql_user_two}}",
+      "Password": "{{postgresql_password_two}}",
+      "SSLMode": "verify-full"
+    }
+  }
+}

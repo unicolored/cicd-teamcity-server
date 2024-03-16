@@ -27,7 +27,7 @@ services:
     ports:
       - "8111:8111"
     networks:
-      teamcity:
+      wrkng:
         ipv4_address: 192.168.176.81
     volumes:
       - volume_server_data:/data/teamcity_server/datadir
@@ -42,7 +42,7 @@ services:
       dockerfile: agent.zero.Dockerfile
       network: host
     networks:
-      teamcity:
+      wrkng:
         ipv4_address: 192.168.176.60
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -61,7 +61,7 @@ services:
       dockerfile: agent.zero.Dockerfile
       network: host
     networks:
-      teamcity:
+      wrkng:
         ipv4_address: 192.168.176.61
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -74,127 +74,77 @@ services:
     user: root
   pgadmin4:
     image: dpage/pgadmin4:latest
+    container_name: pgadmin
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: run/secrets/pgadmin_admin_email
-      PGADMIN_DEFAULT_PASSWORD: run/secrets/pgadmin_admin_password
+      PGADMIN_DEFAULT_EMAIL: {{pgadmin_admin_email}}
+      PGADMIN_DEFAULT_PASSWORD: {{pgadmin_admin_password}}
       PGADMIN_LISTEN_PORT: 8080
     ports:
-      - "8089:8080"
+      - "8080:8080"
     volumes:
       - /home/{{host_user}}/pgadmin/servers.json:/pgadmin4/servers.json
     networks:
-      pgadmin:
-        ipv4_address: 192.168.128.33
+      wrkng:
+        ipv4_address: 192.168.176.33
   strapi:
     image: elestio/strapi-production:latest
+    container_name: strapi
     restart: always
     environment:
       DATABASE_CLIENT: postgres
       NODE_ENV: production
-      ADMIN_PASSWORD: run/secrets/strapi_admin_password
-      ADMIN_EMAIL: run/secrets/strapi_admin_email
-      BASE_URL: run/secrets/strapi_base_url
-      SMTP_HOST: run/secrets/strapi_smtp_host
-      SMTP_PORT: run/secrets/strapi_smtp_port
-      SMTP_AUTH_STRATEGY: run/secrets/strapi_smtp_auth_strategy
-      SMTP_FROM_EMAIL: run/secrets/strapi_smtp_from_email
-      DATABASE_USERNAME: run/secrets/strapi_database_username
-      DATABASE_PASSWORD: run/secrets/strapi_database_password
-      DATABASE_HOST: run/secrets/strapi_database_host
-      DATABASE_PORT: run/secrets/strapi_database_port
-      DATABASE_NAME: run/secrets/strapi_database_name
-      JWT_SECRET: run/secrets/strapi_jwt_secret
-      ADMIN_JWT_SECRET: run/secrets/strapi_admin_jwt_secret
-      APP_KEYS: run/secrets/strapi_app_keys
-      API_TOKEN_SALT: run/secrets/strapi_api_token_salt
-      TRANSFER_TOKEN_SALT: run/secrets/strapi_transfer_token_salt
-    secrets:
-      - strapi_admin_password
-      - strapi_admin_email
-      - strapi_base_url
-      - strapi_smtp_host
-      - strapi_smtp_port
-      - strapi_smtp_auth_strategy
-      - strapi_smtp_from_email
-      - strapi_database_username
-      - strapi_database_password
-      - strapi_database_host
-      - strapi_database_port
-      - strapi_database_name
-      - strapi_jwt_secret
-      - strapi_admin_jwt_secret
-      - strapi_app_keys
-      - strapi_api_token_salt
-      - strapi_transfer_token_salt
+      ADMIN_PASSWORD: {{strapi_admin_password}}
+      ADMIN_EMAIL: {{strapi_admin_email}}
+      BASE_URL: {{strapi_base_url}}
+      SMTP_HOST: {{strapi_smtp_host}}
+      SMTP_PORT: {{strapi_smtp_port}}
+      SMTP_AUTH_STRATEGY: {{strapi_smtp_auth_strategy}}
+      SMTP_FROM_EMAIL: {{strapi_smtp_from_email}}
+      DATABASE_USERNAME: {{postgresql_user_two}}
+      DATABASE_PASSWORD: {{postgresql_password_two}}
+      DATABASE_HOST: {{postgresql_host}}
+      DATABASE_PORT: {{postgresql_port}}
+      DATABASE_NAME: {{postgresql_database_two}}
+      JWT_SECRET: {{strapi_jwt_secret}}
+      ADMIN_JWT_SECRET: {{strapi_admin_jwt_secret}}
+      APP_KEYS: {{strapi_app_keys}}
+      API_TOKEN_SALT: {{strapi_api_token_salt}}
+      TRANSFER_TOKEN_SALT: {{strapi_transfer_token_salt}}
     volumes:
       - /home/{{host_user}}/strapi/config:/opt/app/config
-      - /home/{{host_user}}/strapi/src:/opt/app/src
-      # - /home/{{host_user}}/strapi/package.json:/opt/package.json
-      # - /home/{{host_user}}/strapi/yarn.lock:/opt/yarn.lock
+#      - /home/{{host_user}}/strapi/src:/opt/app/src
+      - /home/{{host_user}}/strapi/package.json:/opt/package.json
+      - /home/{{host_user}}/strapi/yarn.lock:/opt/yarn.lock
       - /home/{{host_user}}/strapi/.env:/opt/app/.env
       - /home/{{host_user}}/strapi/public/uploads:/opt/app/public/uploads
       - /home/{{host_user}}/strapi/entrypoint.sh:/opt/app/entrypoint.sh
     ports:
-      - "9930:1337"
+      - "1337:1337"
     networks:
-      strapi:
-        ipv4_address: 192.168.208.22
+      wrkng:
+        ipv4_address: 192.168.176.83
 networks:
-  teamcity:
+  wrkng:
     ipam:
       driver: default
       config:
         - subnet: "192.168.176.0/20"
-  strapi:
-    ipam:
-      driver: default
-      config:
-        - subnet: "192.168.208.0/20"
-  pgadmin:
-    ipam:
-      driver: default
-      config:
-        - subnet: "192.168.128.0/20"
-secrets:
-  strapi_admin_password:
-    file: strapi/secrets/strapi_admin_password.txt
-  strapi_admin_email:
-    file: strapi/secrets/strapi_admin_email.txt
-  strapi_base_url:
-    file: strapi/secrets/strapi_base_url.txt
-  strapi_smtp_host:
-    file: strapi/secrets/strapi_smtp_host.txt
-  strapi_smtp_port:
-    file: strapi/secrets/strapi_smtp_port.txt
-  strapi_smtp_auth_strategy:
-    file: strapi/secrets/strapi_smtp_auth_strategy.txt
-  strapi_smtp_from_email:
-    file: strapi/secrets/strapi_smtp_from_email.txt
-  strapi_database_username:
-    file: strapi/secrets/strapi_database_username.txt
-  strapi_database_password:
-    file: strapi/secrets/strapi_database_password.txt
-  strapi_database_host:
-    file: strapi/secrets/strapi_database_host.txt
-  strapi_database_port:
-    file: strapi/secrets/strapi_database_port.txt
-  strapi_database_name:
-    file: strapi/secrets/strapi_database_name.txt
-  strapi_jwt_secret:
-    file: strapi/secrets/strapi_jwt_secret.txt
-  strapi_admin_jwt_secret:
-    file: strapi/secrets/strapi_admin_jwt_secret.txt
-  strapi_app_keys:
-    file: strapi/secrets/strapi_app_keys.txt
-  strapi_api_token_salt:
-    file: strapi/secrets/strapi_api_token_salt.txt
-  strapi_transfer_token_salt:
-    file: strapi/secrets/strapi_transfer_token_salt.txt
-  pgadmin_admin_email:
-    file: pgadmin/secrets/pgadmin_admin_email.txt
-  pgadmin_admin_password:
-    file: pgadmin/secrets/pgadmin_admin_password.txt
+#  teamcity:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: "192.168.176.0/20"
+#  strapi:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: "192.168.208.0/20"
+#  pgadmin:
+#    ipam:
+#      driver: default
+#      config:
+#        - subnet: "192.168.128.0/20"
 volumes:
   volume_server_data:
     external: true

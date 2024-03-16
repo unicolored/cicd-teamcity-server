@@ -2,22 +2,20 @@ module.exports = ({ env }) => ({
   // ...
   email: {
     config: {
-      provider: "nodemailer",
+      provider: "strapi-provider-email-postmark",
       providerOptions: {
-        host: env("SMTP_HOST"),
-        port: env("SMTP_PORT"),
-        auth: {
-          user: "",
-          pass: "",
-        },
-        secure: false,
-        // ... any custom nodemailer options
+        apiKey: "{{strapi_postmark_api_key}}",
       },
       settings: {
-        defaultFrom: env("SMTP_FROM_EMAIL"),
-        defaultReplyTo: env("SMTP_FROM_EMAIL"),
+        defaultMessageStream: "{{strapi_postmark_stream}}",
+        defaultFrom: "{{strapi_smtp_from_email}}",
+        defaultTo: "{{strapi_admin_email}}",
+        defaultReplyTo: "{{strapi_smtp_from_email}}",
+        defaultVariables: {
+          sentBy: 'strapi',
+        },
       },
-    },
+    }
   },
   // ...
 });

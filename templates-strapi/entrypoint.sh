@@ -1,1 +1,3 @@
-yarn add @strapi/provider-email-nodemailer
+yarn add strapi-provider-email-postmark
+yarn
+yarn start

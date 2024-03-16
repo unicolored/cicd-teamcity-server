@@ -44,37 +44,27 @@
 
 - name: "Copy entrypoint.sh for strapi"
   template:
-        src: templates-strapi/entrypoint.sh
-        dest: "/home/{{host_user}}/strapi/entrypoint.sh"
+        src: templates-strapi/{{item}}
+        dest: "/home/{{host_user}}/strapi/{{item}}"
         owner: "{{host_user}}"
         group: "{{host_user}}"
         mode: '0755'
+  loop:
+    - "entrypoint.sh"
+    - "package.json"
+    - "yarn.lock"
 
--   name: "Copy directories for config"
+-   name: "Copy template for strapi config"
     become: true
-    copy:
-          src: "templates-strapi/{{item}}"
-          dest: "/home/{{host_user}}"
-          owner: "{{host_user}}"
-          group: "{{host_user}}"
-          mode: 'u=rwx,g=r,o=r'
-    loop:
-          - "config"
-    tags: ['copy-files']
-
-#-   name: "Copy secrets"
-#    template:
-#      src: "templates-strapi/secrets/{{ item }}"
-#      dest: "/home/{{host_user}}/secrets/{{ item | basename | regex_replace('\\.txt', '') }}"
-#    with_fileglob:
-#      - "./templates-strapi/secrets/*.txt"
-#    tags: ['copy-files']
-
--   name: "Copy secrets"
     template:
-      src: "{{ item.path }}"
-      dest: "{{ target_dir }}/{{ item.path }}"
-    with_community.general.filetree:
-      path: "templates-strapi/secrets"
-    vars:
-      target_dir: "/home/{{host_user}}/strapi/secrets"
+      src: "templates-strapi/config/{{item}}"
+      dest: "/home/{{host_user}}/strapi/config/{{item}}"
+      owner: "{{host_user}}"
+      group: "{{host_user}}"
+      mode: 'u=rwx,g=r,o=r'
+    loop:
+      - "admin.js"
+      - "database.js"
+      - "plugins.js"
+      - "server.js"
+    tags: ['copy_files']
