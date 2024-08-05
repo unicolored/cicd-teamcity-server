@@ -1,0 +1,6 @@
+<<<<<<< HEAD
+=======
+!*.sample*
+hosts.ini
+.vault_passwd
+>>>>>>> refs/remotes/origin/main

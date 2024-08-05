@@ -1,0 +1,28 @@
+# PACKAGES
+- debug:
+    msg: 📦 TASK PACKAGES
+
+- name: "Upgrade apt safely"
+  apt:
+    upgrade: safe
+    update_cache: yes
+
+- name: Install useful packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop:
+    - htop
+    - ufw
+    - openssh-client
+    - apt-transport-https
+    - openssh-client
+    - ca-certificates
+    - curl
+    - gnupg
+    - lsb-release
+    - wget
+
+- name: Uninstall nginx and apache if present
+  apt: name={{ item }} state=absent
+  loop:
+    - nginx
+    - apache2

@@ -1,0 +1,99 @@
+# DOCKER
+- debug:
+    msg: 🐳 TASK DOCKER
+
+# https://github.com/do-community/ansible-playbooks/blob/master/docker_ubuntu1804/playbook.yml
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools' ]
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/debian {{debian_release}} stable
+    state: present
+
+- name: Install Docker
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - python3-docker
+    update_cache: yes
+    state: latest
+
+- name: Ensure group "docker" exists
+  become: true
+  group:
+    force: true
+    name: docker
+    state: present
+
+- name: "Add the user '{{host_user}}'"
+  become: true
+  user:
+    name: "{{host_user}}"
+    comment: Default user
+    append: yes
+    groups: docker
+
+- name: Install docker-compose from official github repo
+  get_url:
+    url: https://github.com/docker/compose/releases/download/{{docker_compose_version}}/docker-compose-linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: '0755'
+
+- name: Force update permissions on docker-compose
+  file:
+    path: /usr/local/bin/docker-compose
+    mode: '0755'
+    state: file
+
+- name: Create a directory if it does not exist
+  file:
+    path: /var/volumes
+    state: directory
+    mode: '0755'
+
+- name: Create a volume data
+  docker_volume:
+    driver: local
+    name: volume_server_data
+
+- name: Create a volume logs
+  docker_volume:
+    driver: local
+    name: volume_server_logs
+
+- name: Create a volume agent
+  docker_volume:
+    driver: local
+    name: volume_agent
+
+- name: Create a volume postgresql
+  docker_volume:
+    driver: local
+    name: volume_postgresql
+
+- name: "Copy .env for docker-compose"
+  template:
+    src: templates/.env
+    dest: "/home/{{host_user}}/.env"
+    owner: "{{host_user}}"
+    group: "{{host_user}}"
+    mode: '0755'
+
+- name: "Copy docker-compose"
+  template:
+    src: templates/docker-compose.yml
+    dest: "/home/{{host_user}}/docker-compose.yml"
+    owner: "{{host_user}}"
+    group: "{{host_user}}"
+    mode: '0755'
+  tags: [ 'docker-compose' ]
